@@ -7,6 +7,10 @@ describe Oystercard do
     expect(oystercard.balance).to eq (0)
   end
 
+  it 'is initially not in a journey' do
+    expect(oystercard).not_to be_in_journey
+  end
+
   describe "#top_up" do
   #  it { is_expected.to respond_to(:top_up).with(1).argument }
     it 'can top up balance' do
@@ -22,9 +26,10 @@ describe Oystercard do
     end
   end
 
-  describe "#touch_in" do
-    it 'is initially not in a journey' do
-      expect(oystercard).not_to be_in_journey
+  describe "#touch in" do
+    it 'can touch in' do
+    oystercard.touch_in
+    expect(oystercard).to be_in_journey
     end
   end
 
