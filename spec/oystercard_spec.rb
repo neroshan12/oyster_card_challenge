@@ -68,7 +68,6 @@ describe Oystercard do
     end
   end
 
-
   describe '#error' do
     it "raises an error if maximum balance is exceeded" do
       maximum_balance = described_class::MAXIMUM_BALANCE
