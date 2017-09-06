@@ -12,14 +12,14 @@ describe Oystercard do
   end
 
   describe "#top_up" do
-  #  it { is_expected.to respond_to(:top_up).with(1).argument }
+#  it { is_expected.to respond_to(:top_up).with(1).argument }
     it 'can top up balance' do
       expect{oystercard.top_up 1}.to change{ oystercard.balance }.by 1
     end
   end
 
   describe "#deduct" do
-  #  it { is_expected. to respond_to(:deduct).with(1).argument }  # because we want to deduct a value
+#  it { is_expected. to respond_to(:deduct).with(1).argument }  # because we want to deduct a value
     it 'can deduct a value from the balance' do
       oystercard.top_up(20)
       expect{oystercard.deduct 3}.to change{oystercard.balance}.by -3
@@ -27,15 +27,23 @@ describe Oystercard do
   end
 
   describe "#touch in" do
-    it 'can touch in' do
-  #  oystercard.touch_in
+    it 'set in_journey to true' do
+#  oystercard.touch_in
+    oystercard.top_up(10)
     expect{oystercard.touch_in}.to change{oystercard.in_journey?}.from(false).to(true)
+    end
+
+    it 'raise error if balance is below £1' do
+    expect{oystercard.touch_in}.to raise_error "You do not have enough funds to travel"
     end
   end
 
+
   describe "#touch out" do
-    it 'can touch out' do
+    it 'can touch out' do          # balance is 10 within that it block
+      oystercard.top_up(10)
       oystercard.touch_in
+#  oystercard.touch_in
 #      oystercard.touch_out
       expect{oystercard.touch_out}.to change{oystercard.in_journey?}.from(true).to(false)
 #      expect(oystercard).not_to be_in_journey
