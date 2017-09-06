@@ -30,29 +30,41 @@ describe Oystercard do
     it 'set in_journey to true' do
 #  oystercard.touch_in
     oystercard.top_up(10)
-    expect{oystercard.touch_in}.to change{oystercard.in_journey?}.from(false).to(true)
+    expect{oystercard.touch_in(station)}.to change{oystercard.in_journey?}.from(false).to(true)
     end
 
     it 'raise error if balance is below £1' do
-    expect{oystercard.touch_in}.to raise_error "You do not have enough funds to travel"
+    expect{oystercard.touch_in(station)}.to raise_error "You do not have enough funds to travel"
+    end
+
+    let(:station) {double "station"}
+    it 'records what the entry station is' do
+    oystercard.top_up(10)
+    oystercard.touch_in(station)
+    expect(oystercard.entry_station).to eq station
     end
   end
 
-
   describe "#touch out" do
+    let(:station) {double "station"}
     it 'can touch out' do          # balance is 10 within that it block
       oystercard.top_up(10)
-      oystercard.touch_in
-#  oystercard.touch_in
+      oystercard.touch_in(station)
+#     oystercard.touch_in
 #      oystercard.touch_out
-      expect{oystercard.touch_out}.to change{oystercard.in_journey?}.from(true).to(false)
+      expect{oystercard.touch_out(station)}.to change{oystercard.in_journey?}.from(true).to(false)
 #      expect(oystercard).not_to be_in_journey
     end
     it 'charges the minimum fare' do
       oystercard.top_up(10)
-      oystercard.touch_in
+      oystercard.touch_in(station)
       minimum_fare = described_class::MINIMUM_FARE
-      expect{oystercard.touch_out}.to change{oystercard.balance}.by -minimum_fare
+      expect{oystercard.touch_out(station)}.to change{oystercard.balance}.by -minimum_fare
+    end
+    it 'forgets station when touch out' do
+      oystercard.touch_out(station)
+    #  expect{oystercard.entry_station}.to change{oystercard.entry_station}.from(station).to(nil)
+      expect(oystercard.entry_station).to eq nil
     end
   end
 
