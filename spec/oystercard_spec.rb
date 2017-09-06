@@ -28,8 +28,17 @@ describe Oystercard do
 
   describe "#touch in" do
     it 'can touch in' do
-    oystercard.touch_in
-    expect(oystercard).to be_in_journey
+  #  oystercard.touch_in
+    expect{oystercard.touch_in}.to change{oystercard.in_journey?}.from(false).to(true)
+    end
+  end
+
+  describe "#touch out" do
+    it 'can touch out' do
+      oystercard.touch_in
+#      oystercard.touch_out
+      expect{oystercard.touch_out}.to change{oystercard.in_journey?}.from(true).to(false)
+#      expect(oystercard).not_to be_in_journey
     end
   end
 
