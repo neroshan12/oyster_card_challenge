@@ -18,13 +18,13 @@ describe Oystercard do
     end
   end
 
-  describe "#deduct" do
-#  it { is_expected. to respond_to(:deduct).with(1).argument }  # because we want to deduct a value
-    it 'can deduct a value from the balance' do
-      oystercard.top_up(20)
-      expect{oystercard.deduct 3}.to change{oystercard.balance}.by -3
-    end
-  end
+#   describe "#deduct" do
+# #  it { is_expected. to respond_to(:deduct).with(1).argument }  # because we want to deduct a value
+#     it 'can deduct a value from the balance' do
+#       oystercard.top_up(20)
+#       expect{oystercard.deduct 3}.to change{oystercard.balance}.by -3
+#     end
+#   end
 
   describe "#touch in" do
     it 'set in_journey to true' do
@@ -48,11 +48,18 @@ describe Oystercard do
       expect{oystercard.touch_out}.to change{oystercard.in_journey?}.from(true).to(false)
 #      expect(oystercard).not_to be_in_journey
     end
+    it 'charges the minimum fare' do
+      oystercard.top_up(10)
+      oystercard.touch_in
+      minimum_fare = described_class::MINIMUM_FARE
+      expect{oystercard.touch_out}.to change{oystercard.balance}.by -minimum_fare
+    end
   end
+
 
   describe '#error' do
     it "raises an error if maximum balance is exceeded" do
-      maximum_balance = Oystercard::MAXIMUM_BALANCE
+      maximum_balance = described_class::MAXIMUM_BALANCE
       oystercard.top_up(maximum_balance)
       expect {oystercard.top_up 1}.to raise_error "Maximum balance exceeded (£#{maximum_balance})"
     end
